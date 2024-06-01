@@ -6,6 +6,7 @@ import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -31,4 +32,3 @@ public class PostService {
     repository.removeById(id);
   }
 }
-

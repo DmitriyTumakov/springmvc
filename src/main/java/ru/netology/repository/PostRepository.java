@@ -4,16 +4,15 @@ import org.springframework.stereotype.Repository;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class PostRepository {
-//  private final List<Post> allPosts = new ArrayList<>();
-  private final Map<Long, Post> allPosts = new ConcurrentHashMap<>();
-  private static AtomicLong counter = new AtomicLong(1);
+  private final ConcurrentMap<Long, Post> allPosts = new ConcurrentHashMap<>();
+  private static AtomicLong counter = new AtomicLong(0);
 
   public List<Post> all() {
     return new ArrayList<Post>(allPosts.values());
@@ -28,9 +27,9 @@ public class PostRepository {
 
   public Post save(Post post) {
     if (post.getId() == 0) {
+      counter.getAndIncrement();
       post.setId(counter.get());
       allPosts.put(post.getId(), post);
-      counter.getAndIncrement();
       return post;
     } else if (post.getId() >= 1) {
       if (allPosts.containsKey(post.getId())) {
@@ -45,8 +44,8 @@ public class PostRepository {
   public void removeById(long id) {
     if (allPosts.containsKey(id)) {
       allPosts.remove(id);
-      return;
+    } else {
+      System.out.println("404 ID " + id + " not found");
     }
-    throw new NotFoundException();
   }
 }

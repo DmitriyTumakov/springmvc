@@ -15,4 +15,4 @@ DELETE http://localhost:8080/api/posts/4
 
 ####
 
-GET http://localhost:8080/api/posts/3
+GET http://localhost:8080/api/posts/2

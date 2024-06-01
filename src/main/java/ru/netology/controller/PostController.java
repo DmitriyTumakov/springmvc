@@ -7,7 +7,7 @@ import ru.netology.service.PostService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/posts")
+@RequestMapping("/api/posts")
 public class PostController {
   private final PostService service;
 
@@ -31,7 +31,7 @@ public class PostController {
   }
 
   @DeleteMapping("/{id}")
-  public void removeById(@PathVariable long id) {
+  public void removeById(@PathVariable long id) throws Throwable {
     service.removeById(id);
   }
 }
