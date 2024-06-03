@@ -15,12 +15,20 @@ public class PostRepository {
   private static AtomicLong counter = new AtomicLong(0);
 
   public List<Post> all() {
-    return new ArrayList<Post>(allPosts.values());
+    List<Post> posts = new ArrayList<>();
+    for (Post post : allPosts.values()) {
+      if (!post.isRemoved()) {
+        posts.add(post);
+      }
+    }
+    return posts;
   }
 
   public Optional<Post> getById(long id) {
     if (allPosts.containsKey(id)) {
-      return Optional.of(allPosts.get(id));
+      if (!allPosts.get(id).isRemoved()) {
+        return Optional.of(allPosts.get(id));
+      }
     }
     throw new NotFoundException();
   }
@@ -33,8 +41,10 @@ public class PostRepository {
       return post;
     } else if (post.getId() >= 1) {
       if (allPosts.containsKey(post.getId())) {
-        allPosts.get(post.getId()).setContent(post.getContent());
-        return post;
+        if (!allPosts.get(post.getId()).isRemoved()) {
+          allPosts.get(post.getId()).setContent(post.getContent());
+          return post;
+        }
       }
       throw new NotFoundException();
     }
@@ -43,7 +53,9 @@ public class PostRepository {
 
   public void removeById(long id) {
     if (allPosts.containsKey(id)) {
-      allPosts.remove(id);
+      if (!allPosts.get(id).isRemoved()) {
+        allPosts.get(id).setRemoved(true);
+      }
     } else {
       System.out.println("404 ID " + id + " not found");
     }
